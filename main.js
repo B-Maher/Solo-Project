@@ -23,23 +23,39 @@ var card11 = Cards(6, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7a
 var card12 = Cards(6, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7a5DZafV85AWk5f28OC0zitj98YxqWZxL7HeEmLsmxZ1ULJQp&s");
 var blackcard = Cards(0, "https://art.pixilart.com/92b651c9a375d18.png");
 
-var deck = [blackcard, card1, card2, card3, card4, card5, card6, card7, card8, card9, card10, card11, card12]
+var deck = [card1, card2, card3, card4, card5, card6, card7, card8, card9, card10, card11, card12];
 
-function cardGenerator(){
-	var i = 1;
-	while(i < deck.length){
-		$('#' + i).append('<button class="card0 card' + i + '"><img src=' + deck[0].link + '></button>');
-		$('#' + i).append('<button class="hiding card' + i + '"><img src=' + deck[i].link + '></button>');
+//function that generate a random numbr between 0 and the length of the initial array;
+function randomNumberGenerator(array){
+	return Math.floor(Math.random() * array.length)	
+}
+
+function shuffle(array){
+	var newDeck = [];
+	var i = 0;
+	while (i < deck.length){
+			newDeck.splice(randomNumberGenerator(deck), 0, deck[i])
+			i++
+	}
+	return newDeck
+}
+
+function hideAll(){
+	$('.hiding').hide()
+}
+
+function displayCards(array){
+	var i = 0;
+	while(i < array.length){
+		$('#' + (i + 1)).append('<a  class="card0 card' + (i + 1) + '"><img src=' + blackcard.link + '></a>');
+		$('#' + (i + 1)).append('<a  class="hiding card' + (i + 1) + '"><img src=' + array[i].link + '></a>');
 		i++;
 	}
 	hideAll()
 }
 
-	function hideAll(){
-	$('.hiding').hide()
-}
-
-cardGenerator()	
+var shuffledDeck = shuffle(deck);
+displayCards(shuffledDeck);
 
 function reverseCard(n){
 	$('.card0.card' + n).hide()
@@ -52,16 +68,16 @@ function hideCards(n, m){
 	$('.card0.card' + m).show()
 }
 function hidePairs(n, m){
-	$('.hiding.card' + n).hide()
-	$('.hiding.card' + m).hide()
+	$('.hiding.card' + n).fadeOut( "slow" )
+	$('.hiding.card' + m).fadeOut( "slow" )
 }
-var index1 = 0;
-var index2 = 0;
+var index1 ;
+var index2 ;
 var count = true;
 
 
 function theGame(){
-	$('button').on('click', function(){
+	$('a').on('click', function(){
 	if(count){
 		index1 = this.getAttribute('class').slice(10);
 		count = false;
@@ -70,12 +86,12 @@ function theGame(){
 		index2 = this.getAttribute('class').slice(10);
 		count = true;
 		reverseCard(index2)
-		$('button').off()
-		if(deck[index1].pairNumber === deck[index2].pairNumber){
+		$('a').off()
+		if(shuffledDeck[parseInt(index1) - 1].pairNumber === shuffledDeck[parseInt(index2) - 1].pairNumber){
 			setTimeout(function(){
 				hidePairs(index1, index2)
 				theGame();
-			}, 2000)	
+			}, 1000)	
 		}else{
 		setTimeout(function(){
 			hideCards(index1, index2)
@@ -83,8 +99,7 @@ function theGame(){
 		}, 2000)
 		}
 	}
-	
 })
 }
 
-$('button').on('click', theGame())
+$('a').on('click', theGame())
