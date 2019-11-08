@@ -1,11 +1,7 @@
 function Cards(pairNumber, link){
 	var card = {};
 	card.pairNumber = pairNumber;
-	card.state = "down";
 	card.link = link;
-	card.diplay = function(){
-		return this;
-	}
 	return card 
 }
 
@@ -45,10 +41,10 @@ var card33 = Cards(17, "./images/fairy-tail.jpg");
 var card34 = Cards(17, "./images/fairy-tail.jpg");
 var card35 = Cards(18, "./images/one-punch.jpg");
 var card36 = Cards(18, "./images/one-punch.jpg");
-var card37 = Cards(18, "./images/one-punch.jpg");
-var card38 = Cards(18, "./images/one-punch.jpg");
-var card39 = Cards(18, "./images/one-punch.jpg");
-var card40 = Cards(18, "./images/one-punch.jpg");
+var card37 = Cards(19, "./images/berus.jpg");
+var card38 = Cards(19, "./images/berus.jpg");
+var card39 = Cards(20, "./images/konoha.jpg");
+var card40 = Cards(20, "./images/konoha.jpg");
 var blackcard = Cards(0, "./images/back.jpg");
 
 var deck = [card1, card2, card3, card4, card5, card6, card7, card8, card9, card10, card11, card12, card13, card14, card15, card16, card17, card18, card19, card20, card21, card22, card23, card24, card25, card26, card27, card28, card29, card30, card31, card32, card33, card34, card35, card36, card37, card38, card39, card40];
@@ -61,8 +57,8 @@ function randomNumberGenerator(array){
 function shuffle(array){
 	var newDeck = [];
 	var i = 0;
-	while (i < deck.length){
-			newDeck.splice(randomNumberGenerator(deck), 0, deck[i])
+	while (i < array.length){
+			newDeck.splice(randomNumberGenerator(array), 0, array[i])
 			i++
 	}
 	return newDeck
@@ -97,15 +93,15 @@ var shuffledDeck = shuffle(deck);
 function start(){
 	$('#section1').hide()
 	$('#section2').show()
+	$('#section3').show()
 	$('.divs').html('')
 	shuffledDeck = shuffle(deck);
 	displayCards(shuffledDeck);
+	numberOfTry = 0;
+	isComplete = 0;
 	$('a').on('click', theGame())
 }
-$('#start').on('click', function(){
-	start()
-	showAll()
-});
+
 
 function reverseCard(n){
 	$('.card0.card' + n).hide()
@@ -124,10 +120,12 @@ function hidePairs(n, m){
 var index1 ;
 var index2 ;
 var count = true;
-
+var numberOfTry = 0;
+var isComplete = 0;
 
 function theGame(){
 	$('a').on('click', function(){
+		numberOfTry++;
 	if(count){
 		index1 = this.getAttribute('class').slice(10);
 		count = false;
@@ -139,7 +137,11 @@ function theGame(){
 		$('a').off()
 		if(shuffledDeck[parseInt(index1) - 1].pairNumber === shuffledDeck[parseInt(index2) - 1].pairNumber){
 			setTimeout(function(){
-				hidePairs(index1, index2)
+				hidePairs(index1, index2);
+				isComplete++;
+				if(isComplete === (deck.length / 2)){
+					alert('Good Job! it only took you ' + numberOfTry + 'tries')
+				}
 				theGame();
 			}, 1000)	
 		}else{
@@ -148,12 +150,24 @@ function theGame(){
 			theGame();
 		}, 2000)
 		}
+
 	}
 })
 }
 
-$('a').on('click', theGame())
+$('a').on('click', theGame());
+
+$('#playAgain').on('click', function(){
+	start()
+	showAll()
+});
+
+$('#start').on('click', function(){
+	start()
+	showAll()
+});
+
 $('document').ready(function(){
 	$('#section2').hide()
 	$('#section3').hide()
-})
+});
