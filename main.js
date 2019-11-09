@@ -90,7 +90,7 @@ function hidePairs(n, m){
 	$('#' + m).hide();
 }
 
-//function that will check the number of time the user click
+//function that will check the number of time the user click and return the cards that the user click's on
 function theGame(){
 $('.cads').on('click', function(){
 	var id = this.getAttribute('id');//we get the id of the image clicked
@@ -112,34 +112,28 @@ $('.cads').on('click', function(){
 				//we hide the 2 cards
 				hidePairs(index1, index2);
 				isComplete++;
+				//we check if all the cards are flipped
 				if(isComplete === (deck.length / 2)){
-					console.log(timer)
-					$('.time').html(timer)
 					$('#section2').hide();
-					$('main').append('<div class="finalMsg"><p class="final">Good job it only took you ' + timer + ' to complete the Game!</p></div>')
-					console.log('Good Job! it only took you ' + numberOfTry + ' tries');
-					$('#playAgain').on('click', function(){
-					$('.cads').html('').show();
-					$('.cads').removeClass('isFlipped');	
-					setTimeout(function(){
-					start();
-					}, 500)
-					});
+					$('main').append('<div class="finalMsg"><p class="final">Good job it only took you ' + timer + ' to complete the Game!</p></div>');
 				}
 				theGame();
 			}, 500)	
 		}else{
+			//here we return the cards again 
 		setTimeout(function(){
 			$('#' + index1).removeClass('isFlipped')
 			$('#' + index2).removeClass('isFlipped')
 			theGame();
-		}, 2000)
+		}, 750)
 		}
 	}
 });
 }
+
 $('.cads').on('click', theGame());
 
+//function that will start the game
 function start(){
 	$('#section1').hide();
 	$('#section2').show();
@@ -158,6 +152,8 @@ function start(){
 	},5000);
 	
 }
+
+//the function that restart the game
 $('#playAgain').on('click', function(){
 	$('.cads').html('').show();
 	$('.finalMsg').remove();
@@ -172,11 +168,13 @@ $('#start').on('click', function(){
 	start();
 });
 
+//here prepare the game
 $('document').ready(function(){
 	$('#section2').hide();
 	$('#section3').hide();
 });
 
+//functions that will calculate the time the user spend playing
 function convertTime(end, start) {
     
     var str = "";
@@ -205,6 +203,7 @@ function convertTime(end, start) {
     return str
 }
 
+//function that display the time the user spend playing
 function displayTime() {
         var end = new Date();
         endTime = end.toLocaleTimeString('fr-FR', { hour: "numeric", minute: "numeric", second: "numeric" });
